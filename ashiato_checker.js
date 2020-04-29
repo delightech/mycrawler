@@ -45,6 +45,21 @@ puppeteer.launch({headless: false,
     ashiato_page = 'https://pairs.lv/#/visitor/list/1';
     await page.goto(ashiato_page, {waitUntil: 'domcontentloaded'});
     await page.waitFor(5000);
+
+    // TODO 以下をxpath $xで書き直す
+    let date = await page.$('th.date');
+    let dvalue = await (await date.getProperty('textContent')).jsonValue()
+    let time = await page.$('td.time');
+    let tvalue = await (await time.getProperty('textContent')).jsonValue()
+    let age = await page.$('span.user_age');
+    let avalue = await (await age.getProperty('textContent')).jsonValue()
+    let area = await page.$('span.user_area');
+    let arvalue = await (await area.getProperty('textContent')).jsonValue()
+    console.log(dvalue);
+    console.log(tvalue);
+    console.log(avalue);
+    console.log(arvalue);
+    await page.waitFor(5000);
     await page.waitFor(1000000);
     await browser.close();
   } catch (e) {
