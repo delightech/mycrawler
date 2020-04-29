@@ -1,3 +1,6 @@
+const fs = require('fs');
+require('date-utils');
+
 const puppeteer = require('puppeteer');
 const program   = require('commander');
 const { IncomingWebhook } = require('@slack/webhook');
@@ -15,7 +18,7 @@ const id = program.id
 const password  = program.password
 const url = program.url;
 
-puppeteer.launch({headless: false,
+puppeteer.launch({headless: true,
                   dumpio: false,
                   devtools: false,
                   args: ['--lang=ja',
@@ -61,15 +64,23 @@ puppeteer.launch({headless: false,
     let area = await page.$('span.user_area');
     let area_value = await (await area.getProperty('textContent')).jsonValue();
 
-    const webhook = new IncomingWebhook(url);
-    await webhook.send({
-      text: "<!channel>" + " visitor:" + visitor_value + " " + date_value + " " + time_value + " " + age_value + " " + area_value
-    });
+    let text = fs.readFileSync("../weekly_visitor.txt");
+    if(text != visitor_value) {
+      fs.writeFileSync("../weekly_visitor.txt", visitor_value);
+
+      const webhook = new IncomingWebhook(url);
+      await webhook.send({
+        text: "<!channel>" + "\nvisitor: " + visitor_value + "\nbefore: " + text + "\n" + date_value + " " + time_value + " " + age_value + " " + area_value
+      });
+    }
 
     await page.waitFor(5000);
-
     //await page.waitFor(1000000);
     await browser.close();
+
+    var dt = new Date();
+    var formatted = dt.toFormat("YYYYMMDD HH24MISS");
+    console.log('[' + formatted + '] script end');
   } catch (e) {
     console.log(e.toString);
     console.log(e.stack);
