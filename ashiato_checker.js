@@ -1,8 +1,11 @@
 const puppeteer = require('puppeteer');
 const program   = require('commander');
+const { IncomingWebhook } = require('@slack/webhook');
+
 program
   .requiredOption('-i, --id <id>', 'id')
   .requiredOption('-p, --password <password>', 'password')
+  .requiredOption('-u, --url <slack web hook url>', 'password')
   .parse(process.argv);
 
 if(process.argv.length < 3) {
@@ -10,6 +13,7 @@ if(process.argv.length < 3) {
 }
 const id = program.id
 const password  = program.password
+const url = program.url;
 
 puppeteer.launch({headless: false,
                   dumpio: false,
@@ -46,21 +50,25 @@ puppeteer.launch({headless: false,
     await page.goto(ashiato_page, {waitUntil: 'domcontentloaded'});
     await page.waitFor(5000);
 
-    // TODO 以下をxpath $xで書き直す
+    let visitor = await page.$('span.visitor_count');
+    let visitor_value = await (await visitor.getProperty('textContent')).jsonValue();
     let date = await page.$('th.date');
-    let dvalue = await (await date.getProperty('textContent')).jsonValue()
+    let date_value = await (await date.getProperty('textContent')).jsonValue();
     let time = await page.$('td.time');
-    let tvalue = await (await time.getProperty('textContent')).jsonValue()
+    let time_value = await (await time.getProperty('textContent')).jsonValue();
     let age = await page.$('span.user_age');
-    let avalue = await (await age.getProperty('textContent')).jsonValue()
+    let age_value = await (await age.getProperty('textContent')).jsonValue();
     let area = await page.$('span.user_area');
-    let arvalue = await (await area.getProperty('textContent')).jsonValue()
-    console.log(dvalue);
-    console.log(tvalue);
-    console.log(avalue);
-    console.log(arvalue);
+    let area_value = await (await area.getProperty('textContent')).jsonValue();
+
+    const webhook = new IncomingWebhook(url);
+    await webhook.send({
+      text: "<!channel>" + " visitor:" + visitor_value + " " + date_value + " " + time_value + " " + age_value + " " + area_value
+    });
+
     await page.waitFor(5000);
-    await page.waitFor(1000000);
+
+    //await page.waitFor(1000000);
     await browser.close();
   } catch (e) {
     console.log(e.toString);
