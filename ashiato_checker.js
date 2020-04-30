@@ -58,8 +58,8 @@ puppeteer.launch({headless: true,
     await page.waitFor(5000);
 
     visitor_value = ' ';
-    let date = await page.$$('th.date');
-    visitor_value += await (await date[0].getProperty('textContent')).jsonValue();
+    let date = await page.$('th.date');
+    visitor_value += await (await date.getProperty('textContent')).jsonValue();
     visitor_value += "\n";
 
     let time = await page.$$('td.time');
