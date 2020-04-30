@@ -53,20 +53,27 @@ puppeteer.launch({headless: true,
     await page.goto(ashiato_page, {waitUntil: 'domcontentloaded'});
     await page.waitFor(5000);
 
-    visitor_value = '';
+    visitor_value = ' ';
     let date = await page.$$('th.date');
     visitor_value += await (await date[0].getProperty('textContent')).jsonValue();
     visitor_value += "\n";
 
     let time = await page.$$('td.time');
-    let age = await page.$$('span.user_age');
-    let area = await page.$$('span.user_area');
-    for(let i=0; i< time.length; i++) {
+    let summary_inner = await page.$$('div.summary_inner');
+    for(let i=0; i< summary_inner.length; i++) {
       visitor_value += await (await time[i].getProperty('textContent')).jsonValue();
       visitor_value += " ";
-      visitor_value += await (await age[i].getProperty('textContent')).jsonValue();
+      let age = await summary_inner[i].$('a > div > strong > span.user_age');
+      let area = await summary_inner[i].$('a > div > strong > span.user_area');
+      visitor_value += await (await age.getProperty('textContent')).jsonValue();
       visitor_value += " ";
-      visitor_value += await (await area[i].getProperty('textContent')).jsonValue();
+      visitor_value += await (await area.getProperty('textContent')).jsonValue();
+      visitor_value += " ";
+      let user_profiles = await summary_inner[i].$$('a > div > span.user_profile_item');
+      for(let user_profile of user_profiles) {
+        visitor_value += await (await user_profile.getProperty('textContent')).jsonValue();
+        visitor_value += " ";
+      }
       visitor_value += "\n";
     }
 
