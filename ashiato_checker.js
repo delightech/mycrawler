@@ -53,16 +53,22 @@ puppeteer.launch({headless: true,
     await page.goto(ashiato_page, {waitUntil: 'domcontentloaded'});
     await page.waitFor(5000);
 
-    let visitor = await page.$('span.visitor_count');
-    let visitor_value = await (await visitor.getProperty('textContent')).jsonValue();
-    let date = await page.$('th.date');
-    let date_value = await (await date.getProperty('textContent')).jsonValue();
-    let time = await page.$('td.time');
-    let time_value = await (await time.getProperty('textContent')).jsonValue();
-    let age = await page.$('span.user_age');
-    let age_value = await (await age.getProperty('textContent')).jsonValue();
-    let area = await page.$('span.user_area');
-    let area_value = await (await area.getProperty('textContent')).jsonValue();
+    visitor_value = '';
+    let date = await page.$$('th.date');
+    visitor_value += await (await date[0].getProperty('textContent')).jsonValue();
+    visitor_value += "\n";
+
+    let time = await page.$$('td.time');
+    let age = await page.$$('span.user_age');
+    let area = await page.$$('span.user_area');
+    for(let i=0; i< time.length; i++) {
+      visitor_value += await (await time[i].getProperty('textContent')).jsonValue();
+      visitor_value += " ";
+      visitor_value += await (await age[i].getProperty('textContent')).jsonValue();
+      visitor_value += " ";
+      visitor_value += await (await area[i].getProperty('textContent')).jsonValue();
+      visitor_value += "\n";
+    }
 
     let text = fs.readFileSync("../weekly_visitor.txt");
     if(text != visitor_value) {
@@ -70,7 +76,7 @@ puppeteer.launch({headless: true,
 
       const webhook = new IncomingWebhook(url);
       await webhook.send({
-        text: "<!channel>" + "\nvisitor: " + visitor_value + "\nbefore: " + text + "\n" + date_value + " " + time_value + " " + age_value + " " + area_value
+        text: "<!channel>" + visitor_value
       });
     }
 
