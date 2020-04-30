@@ -11,8 +11,12 @@ program
   .requiredOption('-u, --url <slack web hook url>', 'password')
   .parse(process.argv);
 
-if(process.argv.length < 3) {
-    program.help();
+if(process.argv.length < 4) {
+  program.help();
+} else {
+  var dt = new Date();
+  var formatted = dt.toFormat("YYYYMMDD HH24MISS");
+  console.log('[' + formatted + '] script start');
 }
 const id = program.id
 const password  = program.password
