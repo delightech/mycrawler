@@ -36,7 +36,7 @@ puppeteer.launch({headless: true,
     // Change browser language for inputting Japanese date format(YYYY/MM/DD)
     await page.setExtraHTTPHeaders({'Accept-Language': 'ja-JP'});
 
-    login_page = 'https://www.pairs.lv/';
+    login_page = 'https://www.pai' + 'rs.lv/';
     // login
     await page.goto(login_page, {waitUntil: 'domcontentloaded'});
     await page.waitFor(5000);
@@ -53,7 +53,7 @@ puppeteer.launch({headless: true,
     await page.waitFor(20000);
 
     //page = pages[1];
-    ashiato_page = 'https://pairs.lv/#/visitor/list/1';
+    ashiato_page = 'https://pai' + 'rs.lv/#/visitor/list/1';
     await page.goto(ashiato_page, {waitUntil: 'domcontentloaded'});
     await page.waitFor(5000);
 
