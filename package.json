@@ -11,7 +11,7 @@
     "@slack/webhook": "^5.0.3",
     "commander": "^4.1.0",
     "date-utils": "^1.2.21",
-    "electron": "^9.0.3",
+    "electron": "^9.3.1",
     "puppeteer": "^2.0.0"
   },
   "devDependencies": {},
