@@ -7,11 +7,11 @@
     "test": "test"
   },
   "dependencies": {
-    "@slack/web-api": "^5.8.0",
-    "@slack/webhook": "^5.0.3",
-    "commander": "^4.1.0",
+    "@slack/web-api": "^5.15.0",
+    "@slack/webhook": "^5.0.4",
+    "commander": "^4.1.1",
     "date-utils": "^1.2.21",
-    "puppeteer": "^2.0.0",
+    "puppeteer": "^2.1.1",
     "puppeteer-core": "^5.5.0"
   },
   "devDependencies": {},
