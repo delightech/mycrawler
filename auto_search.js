@@ -33,7 +33,7 @@ puppeteer.launch({headless: false,
     await page.setExtraHTTPHeaders({'Accept-Language': 'ja-JP'});
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3864.0 Safari/537.36');
 
-    let search_page = 'SOME SEARCH PAGE';
+    let search_page = 'SEARCH PAGE';
     await page.goto(search_page + 'login');
     await page.waitFor(1000);
     let e = await page.$x('//*[@id="wrapper"]/header/div/div/div[1]/div[1]/div[1]/a');
